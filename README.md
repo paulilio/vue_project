@@ -3,7 +3,7 @@
 ## Inicializa Banco (Json-Server)
 Na pasta API, executar o comando
 ```
-json-server --watch banco.js
+json-server --watch banco.json
 ```
 
 ## Inicializa o projeto Vue
