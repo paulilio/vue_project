@@ -5,60 +5,58 @@
       <thead>
         <th>Cód.</th>
         <th>Nome</th>
-        <th>Qtd Alunos</th>
+        <th>Alunos</th>
       </thead>
       <tbody v-if="Professores.length">
         <tr v-for="(professor, index) in Professores" :key="index">
-          <td>{{ professor.id }}</td>
-          <!-- templatestring -->
+          <td class="colPequeno">{{ professor.id }}</td>
+
           <router-link
-            v-bind:to="`/alunos/${professor.id}`"
+            :to="`/alunos/${professor.id}`"
             tag="td"
-            style="cursor:pointer"
+            style="cursor: pointer"
             >{{ professor.nome }} {{ professor.sobrenome }}</router-link
           >
-          <td>
-            {{ professor.qtdAlunos }}
-          </td>
+
+          <td class="colPequeno">{{ professor.qtdAlunos }}</td>
         </tr>
       </tbody>
-      <div v-else>
-        Nenhum aluno encontrado.
-      </div>
+      <tfoot v-else>
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <h5>Nenhum Professor Encontrado</h5>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
 
 <script>
-import Titulo from "../components/_shared/Titulo";
+import Titulo from "../_share/Titulo";
+
 export default {
   components: {
     Titulo
   },
   data() {
     return {
-      /* Dados Diretos
-            Professores: [
-                {id: 1, nome: "Vinicius"},
-                {id: 2, nome: "Paula"},
-                {id: 3, nome: "Luna"}
-            ] */
       Professores: [],
       Alunos: []
     };
   },
   created() {
     this.$http
-      .get("http://localhost:3000/alunos")
+      .get(process.env.ROOT_API + "/aluno")
       .then(res => res.json())
-      .then(alunos_res => {
-        this.Alunos = alunos_res;
+      .then(alunos => {
+        this.Alunos = alunos;
         this.carregarProfessores();
       });
   },
   props: {},
   methods: {
-    pegarQtdAlunosPorProf() {
+    pegarQtdAlunosPorProfessor() {
       this.Professores.forEach((professor, index) => {
         professor = {
           id: professor.id,
@@ -72,15 +70,20 @@ export default {
     },
     carregarProfessores() {
       this.$http
-        .get("http://localhost:3000/professores")
+        .get("http://localhost:3000/professor")
         .then(res => res.json())
         .then(professor => {
           this.Professores = professor;
-          this.pegarQtdAlunosPorProf();
+          this.pegarQtdAlunosPorProfessor();
         });
     }
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.colPequeno {
+  text-align: center;
+  width: 15%;
+}
+</style>

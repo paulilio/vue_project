@@ -1,47 +1,49 @@
 <template>
-  <div>
-    <Titulo :texto="`Aluno: ${aluno.nome}`" />
-    <button v-show="visualizando" class="btn btnEditar" @click="editar()">
-      Editar
-    </button>
+  <div v-if="!loading">
+    <titulo :texto="`Aluno: ${aluno.nome}`" :btnVoltar="!visualizando">
+      <button v-show="visualizando" class="btn btnEditar" @click="editar()">
+        Editar
+      </button>
+    </titulo>
+
     <table>
       <tbody>
         <tr>
-          <td class="colPequeno">Matrcula:</td>
+          <td class="colPequeno">Matrícula:</td>
           <td>
             <label>{{ aluno.id }}</label>
           </td>
         </tr>
         <tr>
-          <td class="colPequeno">Nome</td>
+          <td class="colPequeno">Nome:</td>
           <td>
             <label v-if="visualizando">{{ aluno.nome }}</label>
             <input v-else v-model="aluno.nome" type="text" />
           </td>
         </tr>
         <tr>
-          <td class="colPequeno">Sobrenome</td>
+          <td class="colPequeno">Sobrenome:</td>
           <td>
             <label v-if="visualizando">{{ aluno.sobrenome }}</label>
             <input v-else v-model="aluno.sobrenome" type="text" />
           </td>
         </tr>
         <tr>
-          <td class="colPequeno">Nascimento</td>
+          <td class="colPequeno">Data Nascimento:</td>
           <td>
             <label v-if="visualizando">{{ aluno.dataNasc }}</label>
             <input v-else v-model="aluno.dataNasc" type="text" />
           </td>
         </tr>
         <tr>
-          <td class="colPequeno">Professor</td>
+          <td class="colPequeno">Professor:</td>
           <td>
             <label v-if="visualizando">{{ aluno.professor.nome }}</label>
-            <select v-else v-model="aluno.professor">
+            <select v-else v-model="aluno.professor.id">
               <option
                 v-for="(professor, index) in professores"
                 :key="index"
-                v-bind:value="professor"
+                v-bind:value="professor.id"
                 >{{ professor.nome }}</option
               >
             </select>
@@ -60,7 +62,8 @@
 </template>
 
 <script>
-import Titulo from "./_shared/Titulo";
+import Titulo from "../_share/Titulo";
+
 export default {
   components: {
     Titulo
@@ -69,7 +72,7 @@ export default {
     return {
       professores: [],
       aluno: {},
-      id: this.$route.params.id,
+      idAluno: this.$route.params.id,
       visualizando: true,
       loading: true
     };
@@ -80,7 +83,7 @@ export default {
   methods: {
     carregarProfessor() {
       this.$http
-        .get("http://localhost:3000/professores")
+        .get("http://localhost:3000/professor")
         .then(res => res.json())
         .then(professor => {
           this.professores = professor;
@@ -89,7 +92,7 @@ export default {
     },
     carregarAluno() {
       this.$http
-        .get(`http://localhost:3000/alunos/${this.id}`)
+        .get(`http://localhost:3000/aluno/${this.idAluno}`)
         .then(res => res.json())
         .then(aluno => {
           this.aluno = aluno;
@@ -107,11 +110,13 @@ export default {
         dataNasc: _aluno.dataNasc,
         professorid: _aluno.professor.id
       };
+
       this.$http
-        .put(`http://localhost:3000/alunos/${_alunoEditar.id}`, _alunoEditar)
+        .put(`http://localhost:3000/aluno/${_alunoEditar.id}`, _alunoEditar)
         .then(res => res.json())
         .then(aluno => (this.aluno = aluno))
         .then(() => (this.visualizando = true));
+
       this.visualizando = !this.visualizando;
     },
     cancelar() {
@@ -134,6 +139,7 @@ export default {
   float: left;
   background-color: rgb(249, 186, 92);
 }
+
 .colPequeno {
   width: 20%;
 }

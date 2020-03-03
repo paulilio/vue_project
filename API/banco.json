@@ -1,5 +1,5 @@
 {
-  "professores": [
+  "professor": [
     {
       "id": 1,
       "nome": "Vinicius"
@@ -13,19 +13,25 @@
       "nome": "Luna"
     }
   ],
-  "alunos": [
+  "aluno": [
     {
       "id": 1,
-      "nome": "Marcus1",
+      "nome": "Marcus",
       "sobrenome": "Xavier",
       "dataNasc": "01/02/1999",
-      "professorid": 2
+      "professor": {
+        "id": 2,
+        "nome": "Paula"
+      }
     },
     {
       "id": 2,
       "nome": "Lucas",
       "sobrenome": "Amaral",
-      "professorid": 2
+      "professor": {
+        "id": 1,
+        "nome": "Vinicius"
+      }
     },
     {
       "id": 3,
@@ -55,15 +61,6 @@
         "id": 3,
         "nome": "Luna"
       }
-    },
-    {
-      "nome": "Edson",
-      "sobrenome": "",
-      "professor": {
-        "id": 2,
-        "nome": "Paula"
-      },
-      "id": 6
     }
   ]
 }
